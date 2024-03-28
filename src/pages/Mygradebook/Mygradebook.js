@@ -68,7 +68,6 @@ const Mygradebook = () => {
 	const [sortedInfo, setSortedInfo] = useState({});
 	const [dataSource, setDataSource] = useState(data);
 	const handleChange = (pagination, filters, sorter) => {
-		console.log("Various parameters", pagination, filters, sorter);
 		setFilteredInfo(filters);
 		setSortedInfo(sorter);
 	};

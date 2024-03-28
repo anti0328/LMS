@@ -8,12 +8,17 @@ import {
 	EllipsisOutlined,
 } from "@ant-design/icons";
 import { Card, List, Col, Row, Avatar, Badge, Progress } from "antd";
-
+import { SERVER_URL } from '../../config'
 
 const Dashboard = () => {
+	const [total, setTotal] = useState(0);
 	const [courses, setCourses] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [pageSize, setPageSize] = useState(9);
+	const [pageNum, setPageNum] = useState(1);
+	let params = {
+		pageNum: pageNum, // Assuming 'id' is already defined in your scope
+	};
 	const navigate = useNavigate();
 
 	const goContents = async (course_id) => {
@@ -21,11 +26,19 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
-		axios.get("http://localhost:4000/canvas/getcourses").then((data) => {
+		axios.get(`${SERVER_URL}/canvas/getTotal`).then(data => {
+			setTotal(data.data.count);
+		})
+	}, [])
+
+	useEffect(() => {
+		setLoading(true)
+		axios.get(`${SERVER_URL}/canvas/getcourses`, { params }).then((data) => {
 			setCourses(data.data);
 			setLoading(false);
 		});
-	}, []);
+		// console.log(pageNum)
+	}, [pageNum]);
 
 	return (
 		<>
@@ -248,8 +261,10 @@ const Dashboard = () => {
 						loading={loading}
 						pagination={{
 							onChange: (num, size) => {
+								setPageNum(num)
 								setPageSize(size);
 							},
+							total: total,
 							pageSize: pageSize,
 							pageSizeOptions: [9],
 						}}

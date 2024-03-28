@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { List, Divider, Collapse } from 'antd'
+import { SERVER_URL } from '../../config'
 
 function CourseContent() {
     let [sourceData, setSourceData] = useState([])
@@ -10,9 +11,9 @@ function CourseContent() {
         course_id: course_id, // Assuming 'id' is already defined in your scope
     };
     useEffect(() => {
-        axios.get("http://localhost:4000/canvas/getcontentbyid", { params })
+        axios.get(`${SERVER_URL}/canvas/getcontentbyid`, { params })
             .then((rlt) => {
-                console.log(rlt.data)
+                // console.log(rlt.data)
                 setSourceData(rlt.data);
             }).catch((error) => {
                 console.error("There was an error!", error);

@@ -103,13 +103,11 @@ const data = [
 ];
 const { Search } = Input;
 
-const onSearch = (value, _e, info) => console.log(info?.source, value);
 const Mycourses = () => {
 	const [filteredInfo, setFilteredInfo] = useState({});
 	const [sortedInfo, setSortedInfo] = useState({});
 	const [dataSource, setDataSource] = useState(data);
 	const handleChange = (pagination, filters, sorter) => {
-		console.log("Various parameters", pagination, filters, sorter);
 		setFilteredInfo(filters);
 		setSortedInfo(sorter);
 	};
