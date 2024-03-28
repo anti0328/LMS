@@ -147,13 +147,7 @@ const Pages = () => {
 			label: <span style={{ marginLeft: "7px" }}>My Gradebook</span>,
 			icon: <FileDoneOutlined style={{ fontSize: "20px" }} />,
 			path: "/mygradebook",
-		},
-		{
-			key: "8",
-			label: <span style={{ marginLeft: "7px" }}>Chat</span>,
-			icon: <WechatOutlined style={{ fontSize: "20px" }} />,
-			path: "/chat",
-		},
+		}
 	];
 	const items = [
 		{
@@ -195,7 +189,8 @@ const Pages = () => {
 					backgroundImage: `url(${navBackImg})`,
 					minHeight: "100vh",
 					backgroundSize: "cover", // Cover the entire Sider area
-					backgroundPosition: "center", // Center the background image
+					backgroundPosition: "center", // Center the background image,
+					position: "sticky"
 				}}
 				width={"13%"}>
 				<div className="demo-logo-vertical" />

@@ -5,6 +5,7 @@ import Mycourses from "./pages/Mycourses/Mycourses";
 import Myattendance from "./pages/Myattendances/Myattendances";
 import Mygradebook from "./pages/Mygradebook/Mygradebook";
 import CourseContent from "./pages/Mycourses/CourseContent";
+import LectureRoom from "./pages/LectureRoom";
 
 const routes =
   [
@@ -26,6 +27,10 @@ const routes =
             {
               path: '/mycourses/:course_id',
               element: <CourseContent />
+            },
+            {
+              path: '/mycourses/:course_id/lectureRoom',
+              element: <LectureRoom />
             }
           ]
         },
