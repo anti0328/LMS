@@ -6,6 +6,7 @@ import Myattendance from "./pages/Myattendances/Myattendances";
 import Mygradebook from "./pages/Mygradebook/Mygradebook";
 import CourseContent from "./pages/Mycourses/CourseContent";
 import LectureRoom from "./pages/LectureRoom";
+import Login from "./pages/Login";
 
 const routes =
   [
@@ -43,6 +44,10 @@ const routes =
           element: <Mygradebook />
         }
       ]
+    },
+    {
+      path: "/login",
+      element: <Login />
     }
   ];
 

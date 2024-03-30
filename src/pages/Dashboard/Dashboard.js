@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import axios from "axios";
 import {
 	UserOutlined,
@@ -7,7 +8,7 @@ import {
 	EditOutlined,
 	EllipsisOutlined,
 } from "@ant-design/icons";
-import { Card, List, Col, Row, Avatar, Badge, Progress } from "antd";
+import { Card, List, Col, Row, Avatar, Progress } from "antd";
 import { SERVER_URL } from '../../config'
 
 const Dashboard = () => {
@@ -17,7 +18,8 @@ const Dashboard = () => {
 	const [pageSize, setPageSize] = useState(9);
 	const [pageNum, setPageNum] = useState(1);
 	let params = {
-		pageNum: pageNum, // Assuming 'id' is already defined in your scope
+		pageNum: pageNum,
+		token: Cookies.get('Authorization')
 	};
 	const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
-		axios.get(`${SERVER_URL}/canvas/getTotal`).then(data => {
+		axios.get(`${SERVER_URL}/canvas/getTotal`, { params }).then(data => {
 			setTotal(data.data.count);
 		})
 	}, [])

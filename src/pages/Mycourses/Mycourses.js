@@ -4,8 +4,6 @@ import { Space, Table, Row, Card, Col, Tag, Input, Button, Progress, } from "ant
 import { CheckCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import moment from "moment/moment";
 import attendanceImg from "../../assets/svg/attendance.svg";
-import journalImg from "../../assets/svg/journal.svg";
-import standardsImg from "../../assets/svg/standards.svg";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
 
