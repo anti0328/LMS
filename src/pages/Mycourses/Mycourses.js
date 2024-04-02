@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Space, Table, Row, Card, Col, Tag, Input, Button, Progress, } from "antd";
+import { Space, Table, Row, Card, Col, Tag, Input, Progress, } from "antd";
 import { CheckCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import moment from "moment/moment";
 import attendanceImg from "../../assets/svg/attendance.svg";
@@ -15,16 +15,28 @@ const Mycourses = () => {
 	const [courses, setCourses] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [pageSize, setPageSize] = useState(9);
-	const [pageNum, setPageNum] = useState(1);
-	const clearAll = () => {
 
-	};
+
+	const courseSearch = (pattern) => {
+		setLoading(true)
+		if (pattern)
+			axios.get(`${SERVER_URL}/canvas/getcourses`).then(async (data) => {
+				const tmp = await data.data.filter(course => {
+					return course.name.toLowerCase().includes(pattern.toLowerCase());
+				})
+				setCourses(tmp);
+				setTotal(tmp.length)
+				setLoading(false);
+			});
+		else
+			getCourses()
+	}
 
 	const columns = [
 		{
 			title: "",
-			dataIndex: "id",
-			key: "id",
+			dataIndex: "canvasCourseId",
+			key: "canvasCourseId",
 			width: "3%",
 			render: (id) => <span style={{ cursor: "pointer" }} onClick={() => goContents(id)}><SearchOutlined /></span>
 		},
@@ -36,17 +48,11 @@ const Mycourses = () => {
 		},
 		{
 			title: "Progress",
-			dataIndex: "progress",
-			key: "progress",
+			dataIndex: "assignments",
+			key: "assignments._id",
 			width: "10%",
-			render: (progress) => <Progress percent={progress} />,
+			render: (assignments) => <Progress percent={assignments.filter(assignment => assignment.published).length / assignments.length * 100} />,
 		},
-		// {
-		// 	title: "Teacher",
-		// 	dataIndex: "teacher",
-		// 	key: "teacher",
-		// 	width: "15%"
-		// },
 		{
 			title: "Date Enrolled",
 			dataIndex: "created_at",
@@ -71,54 +77,32 @@ const Mycourses = () => {
 				return workflow_state == "available" ? <Tag icon={<CheckCircleOutlined />} color="success">active	</Tag> : ""
 			}
 		},
-		// {
-		// 	title: "Other",
-		// 	dataIndex: "id",
-		// 	key: "other",
-		// 	width: "12%",
-		// 	render: (id) => {
-		// 		return <div>
-		// 			<Row><img src={journalImg} style={{ width: "16px", height: "16px", marginRight: "5px", cursor: "pointer" }} /></Row>
-		// 			<Row><img src={standardsImg} style={{ width: "16px", height: "16px", marginTop: "10px", marginRight: "5px", cursor: "pointer" }} /></Row>
-		// 		</div>
-		// 	}
-		// },
 	];
 
-	let params = {
-		pageNum: pageNum, // Assuming 'id' is already defined in your scope
-	};
 	const navigate = useNavigate();
 
 	const goContents = async (course_id) => {
-		navigate(`/mycourses/${course_id}`);
+		navigate(`/mycourses/${course_id}`, { state: { course: courses.filter(course => { return course.canvasCourseId == course_id }) } });
 	};
 
-	useEffect(() => {
-		axios.get(`${SERVER_URL}/canvas/getTotal`).then(data => {
-			setTotal(data.data.count);
-		})
-	}, [])
+	const getCourses = async () => {
+		axios.get(`${SERVER_URL}/canvas/getcourses`).then((data) => {
+			// console.log(data.data)
+			setCourses(data.data);
+			setTotal(data.data.length)
+			setLoading(false);
+		});
+	}
 
 	useEffect(() => {
 		setLoading(true)
-		axios.get(`${SERVER_URL}/canvas/getcourses`, { params }).then((data) => {
-			setCourses(data.data);
-			console.log(data.data)
-			setLoading(false);
-		});
-		// console.log(pageNum)
-	}, [pageNum]);
+		getCourses()
+	}, []);
 	return (
 		<>
 			<Row style={{ padding: "20px", minHeight: "800px" }}>
 				<Card style={{ marginBottom: "20px", width: "100%" }}>
 					<Row>
-						<Col span={14}>
-							<Button onClick={clearAll} style={{ borderRadius: "0px" }}>
-								Clear
-							</Button>
-						</Col>
 						<Col span={10}>
 							<Search
 								placeholder="Input course name..."
@@ -127,6 +111,8 @@ const Mycourses = () => {
 									width: "100%",
 									fontSize: "14px",
 								}}
+								size="large"
+								onSearch={courseSearch}
 							/>
 						</Col>
 					</Row>
@@ -160,7 +146,6 @@ const Mycourses = () => {
 						dataSource={courses}
 						pagination={{
 							onChange: (num, size) => {
-								setPageNum(num)
 								setPageSize(size);
 							},
 							total: total,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	MenuFoldOutlined,
@@ -21,11 +21,10 @@ import {
 	Avatar,
 	Badge,
 	Dropdown,
-	Space,
 } from "antd";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import lmsImg from "../assets/svg/study.svg";
+import lmsImg from "../assets/lms1.png";
 import navBackImg from "../assets/nav_back.jpg";
 import userAvatar from "../assets/avatar/user.jpg";
 
@@ -96,6 +95,10 @@ const Pages = () => {
 		}
 	`;
 
+	useEffect(() => {
+		navigate('/dashboard')
+	}, [])
+
 	const [activeKey, setActiveKey] = useState("4"); // Default active key
 
 	// Function to handle menu item click, set active key and navigate
@@ -147,7 +150,7 @@ const Pages = () => {
 			label: <span style={{ marginLeft: "7px" }}>My Gradebook</span>,
 			icon: <FileDoneOutlined style={{ fontSize: "20px" }} />,
 			path: "/mygradebook",
-		}
+		},
 	];
 	const items = [
 		{
@@ -190,12 +193,16 @@ const Pages = () => {
 					minHeight: "100vh",
 					backgroundSize: "cover", // Cover the entire Sider area
 					backgroundPosition: "center", // Center the background image,
-					position: "sticky"
+					position: "sticky",
 				}}
 				width={"13%"}>
 				<div className="demo-logo-vertical" />
 				<Row justify="center">
-					<img src={lmsImg} style={{ padding: "10px" }} alt="" />
+					<img
+						src={lmsImg}
+						style={{ padding: "10px", width: "70px", height: "70px" }}
+						alt=""
+					/>
 					<h1 style={{ color: "white" }}>LMS</h1>
 				</Row>
 				<StyledMenu
@@ -247,7 +254,7 @@ const Pages = () => {
 					<div
 						style={{
 							float: "right",
-							width: "14%",
+							width: "17%",
 						}}>
 						<Row justify="end">
 							<Col
@@ -312,10 +319,20 @@ const Pages = () => {
 									}}
 									trigger={["click"]}>
 									<a onClick={(e) => e.preventDefault()}>
-										<Space>
+										<div
+											style={{
+												alignItems: "center",
+												display: "flex",
+												flexDirection: "row",
+												marginLeft: "30px",
+												height: "100%",
+											}}>
 											<Avatar size={32} icon={<UserOutlined />} />
+											<span style={{ marginLeft: "5px", marginRight: "5px" }}>
+												User
+											</span>
 											<DownOutlined />
-										</Space>
+										</div>
 									</a>
 								</Dropdown>
 							</Col>

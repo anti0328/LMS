@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import axios from "axios";
 import {
 	UserOutlined,
@@ -15,32 +14,20 @@ const Dashboard = () => {
 	const [total, setTotal] = useState(0);
 	const [courses, setCourses] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [pageSize, setPageSize] = useState(9);
-	const [pageNum, setPageNum] = useState(1);
-	let params = {
-		pageNum: pageNum,
-		token: Cookies.get('Authorization')
-	};
 	const navigate = useNavigate();
 
 	const goContents = async (course_id) => {
-		navigate(`/mycourses/${course_id}`);
+		navigate(`/mycourses/${course_id}`, { state: { course: courses.filter(course => { return course.canvasCourseId == course_id }) } });
 	};
 
 	useEffect(() => {
-		axios.get(`${SERVER_URL}/canvas/getTotal`, { params }).then(data => {
-			setTotal(data.data.count);
+		axios.get(`${SERVER_URL}/canvas/getcourses`).then(data => {
+			setTotal(data.data.length);
+			setCourses(data.data)
+			setLoading(false)
 		})
 	}, [])
 
-	useEffect(() => {
-		setLoading(true)
-		axios.get(`${SERVER_URL}/canvas/getcourses`, { params }).then((data) => {
-			setCourses(data.data);
-			setLoading(false);
-		});
-		// console.log(pageNum)
-	}, [pageNum]);
 
 	return (
 		<>
@@ -89,10 +76,10 @@ const Dashboard = () => {
 							bordered={false}>
 							<Row>
 								<Col span={12}>
-									Total: <b>0</b>
+									Total: <b>{total}</b>
 								</Col>
 								<Col span={12}>
-									Active: <b>0</b>
+									Active: <b>{total}</b>
 								</Col>
 							</Row>
 						</Card>
@@ -262,13 +249,8 @@ const Dashboard = () => {
 					<List
 						loading={loading}
 						pagination={{
-							onChange: (num, size) => {
-								setPageNum(num)
-								setPageSize(size);
-							},
 							total: total,
-							pageSize: pageSize,
-							pageSizeOptions: [9],
+							pageSize: 9
 						}}
 						grid={{
 							gutter: 16,
@@ -324,11 +306,11 @@ const Dashboard = () => {
 														color: "#166083",
 														cursor: "pointer"
 													}}
-													onClick={() => { goContents(item.id) }}
+													onClick={() => { goContents(item.canvasCourseId) }}
 												>
 													{item.name}
 												</h2></Row>
-											<span style={{ display: "flex", flexDirection: "column", alignItems: "center" }}><Progress type="circle" percent={item.progress} format={(per) => `${per}%`} size={160} /></span>
+											<span style={{ display: "flex", flexDirection: "column", alignItems: "center" }}><Progress type="circle" percent={item.assignments.filter(assignment => assignment.published).length / item.assignments.length * 100} format={(per) => `${per}%`} size={160} /></span>
 
 										</div>
 									}
@@ -340,7 +322,8 @@ const Dashboard = () => {
 				<Col span={1}></Col>
 			</Row>
 		</>
-	);
+	)
+		;
 };
 
 export default Dashboard;

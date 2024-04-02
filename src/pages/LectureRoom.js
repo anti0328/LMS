@@ -7,10 +7,15 @@ const LectureRoom = () => {
     const navigate = useNavigate()
     const [data, setData] = useState()
     const location = useLocation();
+    const tmp = {
+        course_id: location.state.course_id,
+        page_url: location.state.page_url
+    }
     useEffect(() => {
         let params = {
-            info: location.state, // Assuming 'id' is already defined in your scope
+            info: tmp
         };
+        console.log(location.state.assignments)
         axios.get(`${SERVER_URL}/canvas/getlecture`, { params }).then(data => {
             if (data.data.body)
                 setData(data.data.body);
