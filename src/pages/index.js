@@ -8,7 +8,6 @@ import {
 	ReadOutlined,
 	FileDoneOutlined,
 	LogoutOutlined,
-	WechatOutlined,
 	DownOutlined,
 	LockOutlined,
 } from "@ant-design/icons";
@@ -22,16 +21,21 @@ import {
 	Badge,
 	Dropdown,
 } from "antd";
+
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import lmsImg from "../assets/lms1.png";
 import navBackImg from "../assets/nav_back.jpg";
 import userAvatar from "../assets/avatar/user.jpg";
-
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 const { Header, Sider } = Layout;
+
 const Pages = () => {
 	const navigate = useNavigate();
 	const [collapsed, setCollapsed] = useState(false);
+	const [menu, setMenu] = useState([])
+	const user = useSelector(state => state.user)
 	const StyledMenu = styled(Menu)`
 		.ant-menu-item {
 			color: white;
@@ -96,7 +100,9 @@ const Pages = () => {
 	`;
 
 	useEffect(() => {
-		navigate('/dashboard')
+		if (!Cookies.get("token"))
+			navigate("/login")
+		console.log(user.role)
 	}, [])
 
 	const [activeKey, setActiveKey] = useState("4"); // Default active key
@@ -107,7 +113,26 @@ const Pages = () => {
 		navigate(item.path);
 	};
 
-	const menuItems = [
+	// const getMenus = (role) => {
+	// 	switch (role) {
+	// 		case "admin":
+	// 			return menuAdminItems
+	// 			break;
+	// 		case "student":
+	// 			return menuStudentItems
+	// 			break;
+	// 		case "parent":
+	// 			return menuParentItems
+	// 			break;
+	// 		case "proctor":
+	// 			return menuProctorItems
+	// 			break;
+
+	// 		default:
+	// 			break;
+	// 	}
+	// }
+	const menuStudentItems = [
 		{
 			key: "1",
 			label: "User",
@@ -152,6 +177,7 @@ const Pages = () => {
 			path: "/mygradebook",
 		},
 	];
+	const menuAdminItems = [];
 	const items = [
 		{
 			label: (
@@ -196,7 +222,7 @@ const Pages = () => {
 					position: "sticky",
 				}}
 				width={"13%"}>
-				<div className="demo-logo-vertical" />
+				<div />
 				<Row justify="center">
 					<img
 						src={lmsImg}
@@ -293,7 +319,7 @@ const Pages = () => {
 														aria-hidden="true"
 														width="20"
 														height="20"
-														class="svg-inline--fa fa-bell fa-w-14"
+														className="svg-inline--fa fa-bell fa-w-14"
 														data-prefix="far"
 														data-icon="bell"
 														role="img"

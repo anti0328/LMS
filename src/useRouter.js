@@ -7,6 +7,8 @@ import Mygradebook from "./pages/Mygradebook/Mygradebook";
 import CourseContent from "./pages/Mycourses/CourseContent";
 import LectureRoom from "./pages/LectureRoom";
 import Login from "./pages/Login";
+import NotPage from "./pages/NotPage";
+import Profile from "./pages/User/MyProfile";
 
 const routes =
   [
@@ -42,12 +44,20 @@ const routes =
         {
           path: '/mygradebook',
           element: <Mygradebook />
+        },
+        {
+          path: '/profile',
+          element: <Profile />
         }
       ]
     },
     {
       path: "/login",
       element: <Login />
+    },
+    {
+      path: "*",
+      element: <NotPage />
     }
   ];
 

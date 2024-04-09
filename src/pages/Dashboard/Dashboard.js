@@ -8,6 +8,7 @@ import {
 	EllipsisOutlined,
 } from "@ant-design/icons";
 import { Card, List, Col, Row, Avatar, Progress } from "antd";
+import Cookies from "js-cookie";
 import { SERVER_URL } from '../../config'
 
 const Dashboard = () => {
@@ -21,11 +22,15 @@ const Dashboard = () => {
 	};
 
 	useEffect(() => {
-		axios.get(`${SERVER_URL}/canvas/getcourses`).then(data => {
-			setTotal(data.data.length);
-			setCourses(data.data)
-			setLoading(false)
-		})
+		if (Cookies.get('token'))
+			axios.get(`${SERVER_URL}/canvas/getcourses`).then(data => {
+				setTotal(data.data.length);
+				setCourses(data.data)
+				setLoading(false)
+			})
+		else
+			navigate("/login")
+
 	}, [])
 
 
